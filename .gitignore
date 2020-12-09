@@ -1,0 +1,8 @@
+__pycache__
+dtd/imdb
+dtd/labels
+dtd/images/*
+!dtd/images/scaly
+.vscode
+test.py
+log/DEBUG_Batik_70_500by500_augmented
