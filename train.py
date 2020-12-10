@@ -149,7 +149,7 @@ def train(args):
     true_label = torch.ones(args.batch_size, args.spatial_size*args.spatial_size)
     fake_label = torch.zeros(args.batch_size, args.spatial_size*args.spatial_size)
 
-    true_label = smooth_positive_labels(true_label, percentage=0.0955)
+    true_label = smooth_positive_labels(true_label, percentage=0.1193)
 
     # for fixed sampling
     fixed_noise = to_var(generator.generate_noise(batch_size=8,
