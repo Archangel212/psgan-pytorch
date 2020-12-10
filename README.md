@@ -1,4 +1,4 @@
-Pytorch implementation of PSGAN.
+Pytorch implementation of PSGAN on several Batik Dataset.
   
 Cloned from https://github.com/a-maumau/psgan.pytorch
 Using rented GPU hosted on paperspace
@@ -10,7 +10,13 @@ Author's code
 - https://github.com/zalandoresearch/psgan  
   
 # Samples of Training Result
-trained on DTD scaly.  
+
+![](samples/Batik_500by500_homogenous_736-900_sample_e10000_batik.png)
+
+![](samples/Batik_70_500by500_Single_images_sample_e10000.png)
+
+![](samples/Batik_70_500by500_Augmented_sample_e10000.png)
+<!-- trained on DTD scaly.  
   
 same global noise.
 ![same_global_noise.png](samples/sample_e10000.png)  
@@ -24,4 +30,4 @@ interpolation.
   
 left to right.  
 ![left_to_right_interpolation.png](samples/left_to_right_interpolation_sample_resized.png)  
-  
+   -->

@@ -180,8 +180,8 @@ def train(args):
         _train_loader = tqdm(train_loader, ncols=100)
 
 
-        #decaying std for every minibatch
         std = 0.1
+        #decaying std for every minibatch
         # std_decay = std / (train_loader.__len__() - 1)
 
         for images in _train_loader:
