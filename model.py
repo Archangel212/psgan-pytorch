@@ -55,16 +55,18 @@ class PSGANGenerator(nn.Module):
 
         self.generate = nn.Sequential(*layers)
 
-        # MLP that generates K
-        self.periodic_noise_mlp_layer1 = nn.Linear(global_noise_dim, hidden_noise_dim)
-        self.periodic_noise_mlp_layer2_1 = nn.Sequential(
-            nn.ReLU(),
-            nn.Linear(hidden_noise_dim, periodic_noise_dim)
-        )
-        self.periodic_noise_mlp_layer2_2 = nn.Sequential(
-            nn.ReLU(),
-            nn.Linear(hidden_noise_dim, periodic_noise_dim)
-        )
+        if global_noise_dim > 0:
+          # MLP that generates K
+          self.periodic_noise_mlp_layer1 = nn.Linear(global_noise_dim, hidden_noise_dim)
+          self.periodic_noise_mlp_layer2_1 = nn.Sequential(
+              nn.ReLU(),
+              nn.Linear(hidden_noise_dim, periodic_noise_dim)
+          )
+          self.periodic_noise_mlp_layer2_2 = nn.Sequential(
+              nn.ReLU(),
+              nn.Linear(hidden_noise_dim, periodic_noise_dim)
+          )
+
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -95,17 +97,25 @@ class PSGANGenerator(nn.Module):
         Z_p = torch.zeros(batch_size, self.periodic_noise_dim, self.spatial_size, self.spatial_size).type(Z.type())
 
         if tile is None:
-            # pick one Z_g which is same value in the spatial dimension
-            # batch x Z_p dim x 1 x 1 -> batch x hidden_noise_dim
-            k = self.periodic_noise_mlp_layer1(Z[:, self.local_noise_dim:self.local_noise_dim+self.global_noise_dim, 0, 0].view(batch_size, -1))
 
-            k1 = self.periodic_noise_mlp_layer2_1(k)
-            k2 = self.periodic_noise_mlp_layer2_2(k)
+            if self.global_noise_dim > 0:
+              # pick one Z_g which is same value in the spatial dimension
+              # batch x Z_p dim x 1 x 1 -> batch x hidden_noise_dim
+              k = self.periodic_noise_mlp_layer1(Z[:, self.local_noise_dim:self.local_noise_dim+self.global_noise_dim, 0, 0].view(batch_size, -1))
 
-            # naive...
-            for l in range(self.spatial_size):
-                for m in range(self.spatial_size):
-                    Z_p[:, :, l, m] = k1*l + k2*m
+              k1 = self.periodic_noise_mlp_layer2_1(k)
+              k2 = self.periodic_noise_mlp_layer2_2(k)
+
+              # naive...
+              for l in range(self.spatial_size):
+                  for m in range(self.spatial_size):
+                      Z_p[:, :, l, m] = k1*l + k2*m
+              
+            else:
+              c = torch.rand(1).item()*math.pi
+              bias = torch.empty((batch_size, self.periodic_noise_dim,self.spatial_size, self.spatial_size)).normal_(mean=c, std=0.02*c)
+              bias.requires_grad_()
+              Z_p = bias
 
             Z_p = torch.sin(Z_p + torch.rand(batch_size, self.periodic_noise_dim, 1, 1).type(Z.type())*2*math.pi)
 
