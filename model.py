@@ -115,7 +115,7 @@ class PSGANGenerator(nn.Module):
               c = torch.rand(1).item()*math.pi
               bias = torch.empty((batch_size, self.periodic_noise_dim,self.spatial_size, self.spatial_size)).normal_(mean=c, std=0.02*c)
               bias.requires_grad_()
-              Z_p = bias
+              Z_p = bias.to("cuda:0" if torch.cuda.is_available() else "cpu")
 
             Z_p = torch.sin(Z_p + torch.rand(batch_size, self.periodic_noise_dim, 1, 1).type(Z.type())*2*math.pi)
 
