@@ -297,8 +297,8 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=25, help="mini batch size")
     parser.add_argument('--num_workers', type=int, default=8, help="worker # of data loader")
 
-    parser.add_argument('--learning_rate_g', type=float, default=2e-4, help="initial value of learning rate")
-    parser.add_argument('--learning_rate_d', type=float, default=5e-5, help="initial value of learning rate")
+    parser.add_argument('--learning_rate_g', type=float, default=1e-4, help="initial value of learning rate")
+    parser.add_argument('--learning_rate_d', type=float, default=4e-4, help="initial value of learning rate")
     parser.add_argument('--adam_beta', type=float, default=0.5, help="initial value of learning rate")
     parser.add_argument('--decay_value', type=float, default=0.1, help="decay learning rate with count of args:decay_every in this factor.")
     parser.add_argument('--decay_every', type=int, default=2000, help="count of decaying learning rate")
