@@ -12,7 +12,7 @@ UNIFORM_RANGE_MAX = 1.0
 
 class PSGANGenerator(nn.Module):
     inplace_flag = False
-    def __init__(self, conv_channels=[64, 512, 256, 128, 64, 3], kernel_size=5, local_noise_dim=40, global_noise_dim=20, periodic_noise_dim=4, spatial_size=6, hidden_noise_dim=60):
+    def __init__(self, conv_channels=[64, 512, 256, 128, 64, 3], kernel_size=5,padding=2,local_noise_dim=40, global_noise_dim=20, periodic_noise_dim=4, spatial_size=6, hidden_noise_dim=60):
         """
             args:
                 input_channel: int
@@ -46,11 +46,11 @@ class PSGANGenerator(nn.Module):
         layers = []
         
         for ch_index in range(1, len(conv_channels)-1):
-            layers.append(nn.ConvTranspose2d(in_channels=conv_channels[ch_index-1], out_channels=conv_channels[ch_index], kernel_size=kernel_size, stride=2, padding=1))
+            layers.append(nn.ConvTranspose2d(in_channels=conv_channels[ch_index-1], out_channels=conv_channels[ch_index], kernel_size=kernel_size, stride=2, padding=padding))
             layers.append(nn.BatchNorm2d(conv_channels[ch_index]))
             layers.append(nn.LeakyReLU(negative_slope=0.2, inplace=self.inplace_flag))
 
-        layers.append(nn.ConvTranspose2d(in_channels=conv_channels[-2], out_channels=conv_channels[-1], kernel_size=kernel_size, stride=2, padding=1))
+        layers.append(nn.ConvTranspose2d(in_channels=conv_channels[-2], out_channels=conv_channels[-1], kernel_size=kernel_size, stride=2, padding=padding))
         layers.append(nn.Tanh())
 
         self.generate = nn.Sequential(*layers)
@@ -352,7 +352,7 @@ class PSGANGenerator(nn.Module):
 
 class PSGANDiscriminator(nn.Module):
     inplace_flag = False
-    def __init__(self, conv_channels=[3, 64, 128, 256, 512, 1], kernel_size=5):
+    def __init__(self, conv_channels=[3, 64, 128, 256, 512, 1], kernel_size=5, padding=2):
         super(PSGANDiscriminator, self).__init__()
         """
             args:
@@ -365,12 +365,12 @@ class PSGANDiscriminator(nn.Module):
 
         layers = []
         for ch_index in range(1, len(conv_channels)-1):
-            layers.append(nn.Conv2d(in_channels=conv_channels[ch_index-1], out_channels=conv_channels[ch_index], kernel_size=kernel_size, stride=2, padding=1))
+            layers.append(nn.Conv2d(in_channels=conv_channels[ch_index-1], out_channels=conv_channels[ch_index], kernel_size=kernel_size, stride=2, padding=padding))
             if ch_index != 1:
                 layers.append(nn.BatchNorm2d(conv_channels[ch_index]))
             layers.append(nn.LeakyReLU(negative_slope=0.2, inplace=self.inplace_flag))
 
-        layers.append(nn.Conv2d(in_channels=conv_channels[-2], out_channels=conv_channels[-1], kernel_size=kernel_size, stride=2, padding=1))
+        layers.append(nn.Conv2d(in_channels=conv_channels[-2], out_channels=conv_channels[-1], kernel_size=kernel_size, stride=2, padding=padding))
         layers.append(nn.Sigmoid())
 
         self.discriminate = nn.Sequential(*layers)
