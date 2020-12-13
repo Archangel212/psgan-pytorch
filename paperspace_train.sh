@@ -1,5 +1,5 @@
 batik_dataset_name=dtd_honeycomb_dataset 
-experiment_name=single_honeycomb_cardinal_dimensionality,kernel=5
+experiment_name=single_honeycomb_cardinal_dimensionality,kernel=5,zl_dim=30,zp_dim=3
 
 python train.py --dataset $batik_dataset_name --save_dir ./log/$batik_dataset_name/$experiment_name --tqdm_notebook True
 
