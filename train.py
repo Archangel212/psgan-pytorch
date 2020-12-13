@@ -280,7 +280,7 @@ if __name__ == '__main__':
     parser.add_argument('--mlp_hidden_dim', type=int, default=60, help='size of periodic part noise dimension')
     parser.add_argument('--spatial_size', type=int, default=5, help='size of spatial dimension')
     # for pytorch there is no pad="same", if you need use 5 or other sizes, you might need add torch.nn.functional.pad in the model.
-    parser.add_argument('--kernel_size', type=int, default=4, help='size of kernels')
+    parser.add_argument('--kernel_size', type=int, default=5, help='size of kernels')
     parser.add_argument('--layer_num', type=int, default=5, help='number of layers')
     parser.add_argument('--base_conv_channel', type=int, default=64, help='base channel number of convolution layer')
     parser.add_argument('--tile', type=int, default=None, help='')
