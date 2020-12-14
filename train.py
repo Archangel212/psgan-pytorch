@@ -127,9 +127,9 @@ def train(args):
     # training setting
     if args.sgd:
         generator_optimizer = torch.optim.SGD(generator.parameters(), lr=args.learning_rate_g, momentum=0.9, weight_decay=1e-8)
-        discriminator_optimizer = torch.optim.SGD(discriminator.parameters(), lr=args.learning_rate_g, momentum=0.9, weight_decay=1e-8)
+        discriminator_optimizer = torch.optim.SGD(discriminator.parameters(), lr=args.learning_rate_d, momentum=0.9, weight_decay=1e-8)
     else:
-        generator_optimizer = torch.optim.Adam(generator.parameters(), lr=args.learning_rate_d, weight_decay=1e-8, betas=(args.adam_beta, 0.999))
+        generator_optimizer = torch.optim.Adam(generator.parameters(), lr=args.learning_rate_g, weight_decay=1e-8, betas=(args.adam_beta, 0.999))
         discriminator_optimizer = torch.optim.Adam(discriminator.parameters(), lr=args.learning_rate_d, weight_decay=1e-8, betas=(args.adam_beta, 0.999))
     
     # for cropping size
@@ -275,7 +275,7 @@ if __name__ == '__main__':
 
     # detail settings
     parser.add_argument('--zl_dim', type=int, default=60, help='size of local part noise dimension')   # set default same as author's implementation
-    parser.add_argument('--zg_dim', type=int, default=60, help='size of global part noise dimension')  # set default same as author's implementation
+    parser.add_argument('--zg_dim', type=int, default=20, help='size of global part noise dimension')  # set default same as author's implementation
     parser.add_argument('--zp_dim', type=int, default=3, help='size of periodic part noise dimension') # set default same as author's implementation
     parser.add_argument('--mlp_hidden_dim', type=int, default=60, help='size of periodic part noise dimension')
     parser.add_argument('--spatial_size', type=int, default=5, help='size of spatial dimension')
