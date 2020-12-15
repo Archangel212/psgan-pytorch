@@ -274,8 +274,8 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', type=str, default='batik_dataset', help='directory of dataset')
 
     # detail settings
-    parser.add_argument('--zl_dim', type=int, default=40, help='size of local part noise dimension')   # set default same as author's implementation
-    parser.add_argument('--zg_dim', type=int, default=20, help='size of global part noise dimension')  # set default same as author's implementation
+    parser.add_argument('--zl_dim', type=int, default=60, help='size of local part noise dimension')   # set default same as author's implementation
+    parser.add_argument('--zg_dim', type=int, default=60, help='size of global part noise dimension')  # set default same as author's implementation
     parser.add_argument('--zp_dim', type=int, default=3, help='size of periodic part noise dimension') # set default same as author's implementation
     parser.add_argument('--mlp_hidden_dim', type=int, default=60, help='size of periodic part noise dimension')
     parser.add_argument('--spatial_size', type=int, default=5, help='size of spatial dimension')
