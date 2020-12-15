@@ -48,12 +48,13 @@ class PSGANGenerator(nn.Module):
         for ch_index in range(1, len(conv_channels)-1):
             layers.append(nn.ConvTranspose2d(in_channels=conv_channels[ch_index-1], out_channels=conv_channels[ch_index], kernel_size=kernel_size, stride=2, padding=1))
             layers.append(nn.BatchNorm2d(conv_channels[ch_index]))
+            layers.append(nn.Dropout2d(p=0.5))
             layers.append(nn.LeakyReLU(negative_slope=0.2, inplace=self.inplace_flag))
 
         layers.append(nn.ConvTranspose2d(in_channels=conv_channels[-2], out_channels=conv_channels[-1], kernel_size=kernel_size, stride=2, padding=1))
         layers.append(nn.Tanh())
 
-        self.generate = nn.Sequential(*layers)
+        self.generator = nn.Sequential(*layers)
 
         # MLP that generates K
         self.periodic_noise_mlp_layer1 = nn.Linear(global_noise_dim, hidden_noise_dim)
@@ -85,7 +86,7 @@ class PSGANGenerator(nn.Module):
         Z_p = self.gen_periodic_noise(Z, tile)
         Z = torch.cat((Z, Z_p), dim=1)
 
-        x = self.generate(Z)
+        x = self.generator(Z)
 
         return x
 
@@ -359,7 +360,6 @@ class PSGANDiscriminator(nn.Module):
             if ch_index != 1:
                 layers.append(nn.BatchNorm2d(conv_channels[ch_index]))
             layers.append(nn.LeakyReLU(negative_slope=0.2, inplace=self.inplace_flag))
-            layers.append(nn.Dropout2d(p=0.1))
 
         layers.append(nn.Conv2d(in_channels=conv_channels[-2], out_channels=conv_channels[-1], kernel_size=kernel_size, stride=2, padding=1))
         layers.append(nn.Sigmoid())
