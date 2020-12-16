@@ -229,7 +229,7 @@ def train(args):
             discriminator_optimizer.step()
 
             # train generator ####################################################################
-            ######## ( Maximizing log(1-D(G(z))) ) ########
+            ######## ( Maximizing log(D(G(z))) ) ########
             generator_optimizer.zero_grad()
 
             fake_discriminate = discriminator(fake_img)
