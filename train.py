@@ -241,8 +241,6 @@ def train(args):
             generator_loss.backward()
             generator_optimizer.step()
             
-            _train_loader.set_description("train[{}] dloss: {:.5f}, gloss: {:.5f}"
-                         .format(args.save_dir, epoch_total_dloss, epoch_total_gloss))
 
         if (epoch+1) % args.save_sample_every == 0:
             generator.eval()
