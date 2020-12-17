@@ -1,0 +1,20 @@
+
+[#9995]train epoch dloss: 2.08971, gloss: 26.33349
+HBox(children=(HTML(value=''), FloatProgress(value=0.0, layout=Layout(flex='2'), max=5.0), HTML(value='')), layout=Layout(display='inline-flex', flex_flow='row wrap', width='100px'))
+
+[#9996]train epoch dloss: 2.36798, gloss: 23.10283
+HBox(children=(HTML(value=''), FloatProgress(value=0.0, layout=Layout(flex='2'), max=5.0), HTML(value='')), layout=Layout(display='inline-flex', flex_flow='row wrap', width='100px'))
+
+[#9997]train epoch dloss: 2.78795, gloss: 25.63750
+HBox(children=(HTML(value=''), FloatProgress(value=0.0, layout=Layout(flex='2'), max=5.0), HTML(value='')), layout=Layout(display='inline-flex', flex_flow='row wrap', width='100px'))
+
+[#9998]train epoch dloss: 2.27599, gloss: 24.65918
+HBox(children=(HTML(value=''), FloatProgress(value=0.0, layout=Layout(flex='2'), max=5.0), HTML(value='')), layout=Layout(display='inline-flex', flex_flow='row wrap', width='100px'))
+
+[#9999]train epoch dloss: 2.51363, gloss: 27.01578
+HBox(children=(HTML(value=''), FloatProgress(value=0.0, layout=Layout(flex='2'), max=5.0), HTML(value='')), layout=Layout(display='inline-flex', flex_flow='row wrap', width='100px'))
+
+[#10000]train epoch dloss: 1.91214, gloss: 27.08285
+
+data is saved at ./log/Batik_500by500_homogenous_736-900/kernel=4,generator_leakyRelu=0.2,instance_noise_mean=0_std=0.1,label_smoothing=0.0955percent,zl_dim=60,zg_dim=60,learning_rate_g=1e-4,learning_rate_d=4e-4,d_dropout_lastlayer=0.3
+Time for training: 9992.650887727737 seconds
