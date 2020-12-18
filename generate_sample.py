@@ -16,6 +16,7 @@ from model import PSGANGenerator as Generator
 torch.backends.cudnn.benchmark = True
 
 def save_image(imgs, output_dir="log", img_name="output", img_ext=".png"):
+    os.makedirs(output_dir, exist_ok=True)
     vutils.save_image(imgs.data, "{}".format(os.path.join(output_dir, img_name+img_ext)))
 
 def train(args):
@@ -26,6 +27,8 @@ def train(args):
     
     if not os.path.exists(args.save_dir):
         os.makedirs(args.save_dir)
+
+    # args.save_dir = os.path.join(args.save_dir, args.trained_model)
 
     print("\nsaving at {}\n".format(args.save_dir))
     print("initializing...")
@@ -55,7 +58,7 @@ def train(args):
     generator.eval()
 
     print("loading pretrained parameter... ", end="")
-    generator.load_trained_param(args.trained, print_debug=args.show_parameters)
+    generator.load_trained_param(args.trained_model, print_debug=args.show_parameters)
     print("done.")
 
     if args.show_parameters:
@@ -63,15 +66,6 @@ def train(args):
             print(idx, '->', m)
 
         print(args)
-
-    # for sampling
-    random_noise = to_var(generator.generate_noise(batch_size=args.sample_num,
-                                                   local_dim=args.zl_dim,
-                                                   global_dim=args.zg_dim,
-                                                   periodic_dim=args.zp_dim,
-                                                   spatial_size=args.spatial_size,
-                                                   tile=args.tile),
-                    volatile=False)
 
     random_noise_interpolation = to_var(generator.generate_noise_interpolation(batch_size=args.sample_num,
                                                    local_dim=args.zl_dim,
@@ -87,9 +81,20 @@ def train(args):
                                                    spatial_size=args.spatial_size),
                                             volatile=False)
 
-    # generate fake image
-    fake_img = generator(random_noise, tile=args.tile)
-    save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=args.save_dir, img_name="sample_from_random_noise")
+    # generate fake image for sampling
+    sample_dir = os.path.sep.join([args.save_dir, "fake_samples"])
+    for i in range(32):
+      random_noise = to_var(generator.generate_noise(batch_size=args.sample_num,
+                                                    local_dim=args.zl_dim,
+                                                    global_dim=args.zg_dim,
+                                                    periodic_dim=args.zp_dim,
+                                                    spatial_size=args.spatial_size,
+                                                    tile=args.tile),
+                                                    volatile=False)
+      fake_img = generator(random_noise, tile=args.tile)
+      save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=sample_dir, img_name="sample_from_random_noise_" + str(i+1))
+
+
     fake_img = generator(random_noise_interpolation, tile=1)
     save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=args.save_dir, img_name="interpolation_sample")
     fake_img = generator(random_noise_interpolation_left_right, tile=1)
@@ -99,26 +104,23 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     # setting
-    parser.add_argument('--trained', type=str, default="trained_model", help='trained parameter path of generator.')
+    parser.add_argument('--trained_model', type=str, default="trained_model", help='trained parameter path of generator.')
 
     # detail settings
-    parser.add_argument('--zl_dim', type=int, default=40, help='size of local part noise dimension')   # set default same as author's implementation
-    parser.add_argument('--zg_dim', type=int, default=20, help='size of global part noise dimension')  # set default same as author's implementation
+    parser.add_argument('--zl_dim', type=int, default=60, help='size of local part noise dimension')   # set default same as author's implementation
+    parser.add_argument('--zg_dim', type=int, default=60, help='size of global part noise dimension')  # set default same as author's implementation
     parser.add_argument('--zp_dim', type=int, default=3, help='size of periodic part noise dimension') # set default same as author's implementation
     parser.add_argument('--mlp_hidden_dim', type=int, default=60, help='size of periodic part noise dimension')
-    parser.add_argument('--spatial_size', type=int, default=64, help='size of spatial dimension')
+    parser.add_argument('--spatial_size', type=int, default=5, help='size of spatial dimension')
     # for pytorch there is no pad="same", if you need use 5 or other sizes, you might need add torch.nn.functional.pad in the model.
     parser.add_argument('--kernel_size', type=int, default=4, help='size of kernels')
     parser.add_argument('--layer_num', type=int, default=5, help='number of layers')
-    parser.add_argument('--base_conv_channel', type=int, default=32, help='base channel number of convolution layer')
-    parser.add_argument('--tile', type=int, default=1, help='')
+    parser.add_argument('--base_conv_channel', type=int, default=64, help='base channel number of convolution layer')
+    parser.add_argument('--tile', type=int, default=None, help='')
 
-    parser.add_argument('--save_dir', type=str, default="./log/sampled", help='directory of saving sampled image')
+    parser.add_argument('--save_dir', type=str, default="./samples/", help='directory of saving sampled image')
 
-    parser.add_argument('--epochs', type=int, default=10000, help="train epoch num.")
     parser.add_argument('--sample_num', type=int, default=1, help="sample size")
-    parser.add_argument('--num_workers', type=int, default=8, help="worker # of data loader")
-
     parser.add_argument('--gpu_device_num', type=int, default=0, help="device number of gpu")
         
     # option
