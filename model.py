@@ -361,7 +361,7 @@ class PSGANDiscriminator(nn.Module):
             layers.append(nn.LeakyReLU(negative_slope=0.2, inplace=self.inplace_flag))
 
         layers.append(nn.Conv2d(in_channels=conv_channels[-2], out_channels=conv_channels[-1], kernel_size=kernel_size, stride=2, padding=1))
-        layers.append(nn.Dropout2d(p=0.2))
+        # layers.append(nn.Dropout2d(p=0.2))
         # layers.append(nn.Sigmoid())
 
         self.discriminate = nn.Sequential(*layers)
