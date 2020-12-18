@@ -210,7 +210,7 @@ def train(args):
             ########  train discriminator with real image    ########
             ######## ( Maximizing log(D(x))' ) ########
             discriminator_pred = discriminator(imgs)
-            discriminator_true_loss = F.binary_cross_entropy(discriminator_pred, true_labels)
+            discriminator_true_loss = F.binary_cross_entropy_with_logits(discriminator_pred, true_labels)
 
             epoch_total_loss += discriminator_true_loss.item()
             epoch_total_dloss += discriminator_true_loss.item()
@@ -220,7 +220,7 @@ def train(args):
             ########  train discriminator with fake image      ########
             ######## ( Maximizing log(1-D(G(z))) ) ########
             discriminator_pred = discriminator(fake_img.detach())
-            discriminator_fake_loss = F.binary_cross_entropy(discriminator_pred, fake_labels)
+            discriminator_fake_loss = F.binary_cross_entropy_with_logits(discriminator_pred, fake_labels)
 
             epoch_total_loss += discriminator_fake_loss.item()
             epoch_total_dloss += discriminator_fake_loss.item()
@@ -233,7 +233,7 @@ def train(args):
             generator_optimizer.zero_grad()
 
             fake_discriminate = discriminator(fake_img)
-            generator_loss = F.binary_cross_entropy(fake_discriminate, true_labels)
+            generator_loss = F.binary_cross_entropy_with_logits(fake_discriminate, true_labels)
 
             epoch_total_loss += generator_loss.item()
             epoch_total_gloss += generator_loss.item()

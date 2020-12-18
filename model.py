@@ -47,11 +47,11 @@ class PSGANGenerator(nn.Module):
         
         for ch_index in range(1, len(conv_channels)-1):
             layers.append(nn.ConvTranspose2d(in_channels=conv_channels[ch_index-1], out_channels=conv_channels[ch_index], kernel_size=kernel_size, stride=2, padding=1))
-            # layers.append(nn.BatchNorm2d(conv_channels[ch_index]))
+            layers.append(nn.BatchNorm2d(conv_channels[ch_index]))
             layers.append(nn.LeakyReLU(negative_slope=0.2, inplace=self.inplace_flag))
 
         layers.append(nn.ConvTranspose2d(in_channels=conv_channels[-2], out_channels=conv_channels[-1], kernel_size=kernel_size, stride=2, padding=1))
-        layers.append(nn.Tanh())
+        # layers.append(nn.Tanh())
 
         self.generator = nn.Sequential(*layers)
 
@@ -356,13 +356,13 @@ class PSGANDiscriminator(nn.Module):
         layers = []
         for ch_index in range(1, len(conv_channels)-1):
             layers.append(nn.Conv2d(in_channels=conv_channels[ch_index-1], out_channels=conv_channels[ch_index], kernel_size=kernel_size, stride=2, padding=1))
-            # if ch_index != 1:
-            #     layers.append(nn.BatchNorm2d(conv_channels[ch_index]))
+            if ch_index != 1:
+                layers.append(nn.BatchNorm2d(conv_channels[ch_index]))
             layers.append(nn.LeakyReLU(negative_slope=0.2, inplace=self.inplace_flag))
 
         layers.append(nn.Conv2d(in_channels=conv_channels[-2], out_channels=conv_channels[-1], kernel_size=kernel_size, stride=2, padding=1))
         layers.append(nn.Dropout2d(p=0.2))
-        layers.append(nn.Sigmoid())
+        # layers.append(nn.Sigmoid())
 
         self.discriminate = nn.Sequential(*layers)
 
