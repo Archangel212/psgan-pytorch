@@ -81,8 +81,11 @@ def train(args):
                                                    spatial_size=args.spatial_size),
                                             volatile=False)
 
+    experiment_dir = os.path.normpath(args.trained_model).split(os.sep)[-2]
+    dataset_dir = os.path.normpath(args.trained_model).split(os.sep)[-3]
+    sample_dir = os.path.sep.join([args.save_dir, dataset_dir, experiment_dir])
+    
     # generate fake image for sampling
-    sample_dir = os.path.sep.join([args.save_dir, "fake_samples"])
     for i in range(32):
       random_noise = to_var(generator.generate_noise(batch_size=args.sample_num,
                                                     local_dim=args.zl_dim,
@@ -96,9 +99,9 @@ def train(args):
 
 
     fake_img = generator(random_noise_interpolation, tile=1)
-    save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=args.save_dir, img_name="interpolation_sample")
+    save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=sample_dir, img_name="interpolation_sample")
     fake_img = generator(random_noise_interpolation_left_right, tile=1)
-    save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=args.save_dir, img_name="interpolation_left_to_right_sample")
+    save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=sample_dir, img_name="interpolation_left_to_right_sample")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
