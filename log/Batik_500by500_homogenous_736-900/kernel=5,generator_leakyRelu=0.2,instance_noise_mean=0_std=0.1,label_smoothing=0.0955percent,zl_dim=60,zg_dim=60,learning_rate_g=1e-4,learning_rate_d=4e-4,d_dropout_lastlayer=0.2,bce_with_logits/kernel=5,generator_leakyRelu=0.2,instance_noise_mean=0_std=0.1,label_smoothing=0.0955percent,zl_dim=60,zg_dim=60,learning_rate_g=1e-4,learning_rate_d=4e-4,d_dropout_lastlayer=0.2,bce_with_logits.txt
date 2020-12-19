@@ -1,0 +1,20 @@
+[#5758]train epoch dloss: -2654.78114, gloss: 62820.93848
+HBox(children=(HTML(value=''), FloatProgress(value=0.0, layout=Layout(flex='2'), max=5.0), HTML(value='')), layout=Layout(display='inline-flex', flex_flow='row wrap', width='100px'))
+
+[#5759]train epoch dloss: -3829.38337, gloss: 61715.85059
+HBox(children=(HTML(value=''), FloatProgress(value=0.0, layout=Layout(flex='2'), max=5.0), HTML(value='')), layout=Layout(display='inline-flex', flex_flow='row wrap', width='100px'))
+
+[#5760]train epoch dloss: -4689.23513, gloss: 62041.45801
+HBox(children=(HTML(value=''), FloatProgress(value=0.0, layout=Layout(flex='2'), max=5.0), HTML(value='')), layout=Layout(display='inline-flex', flex_flow='row wrap', width='100px'))
+
+[#5761]train epoch dloss: -3583.11819, gloss: 66556.13965
+HBox(children=(HTML(value=''), FloatProgress(value=0.0, layout=Layout(flex='2'), max=5.0), HTML(value='')), layout=Layout(display='inline-flex', flex_flow='row wrap', width='100px'))
+
+[#5762]train epoch dloss: -3738.15493, gloss: 64144.06836
+HBox(children=(HTML(value=''), FloatProgress(value=0.0, layout=Layout(flex='2'), max=5.0), HTML(value='')), layout=Layout(display='inline-flex', flex_flow='row wrap', width='100px'))
+
+[#5763]train epoch dloss: -4030.74423, gloss: 64222.32031
+HBox(children=(HTML(value=''), FloatProgress(value=0.0, layout=Layout(flex='2'), max=5.0), HTML(value='')), layout=Layout(display='inline-flex', flex_flow='row wrap', width='100px'))
+
+[#5764]train epoch dloss: -4874.13822, gloss: 66218.84375
+HBox(children=(HTML(value=''), FloatProgress(value=0.0, layout=Layout(flex='2'), max=5.0), HTML(value='')), layout=Layout(display='inline-flex', flex_flow='row wrap', width='100px'))
