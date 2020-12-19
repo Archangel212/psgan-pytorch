@@ -7,17 +7,25 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.utils as vutils
+import torchvision.transforms as vtransforms
 from torch.autograd import Variable
 
+from PIL import Image
 from tqdm import tqdm
 
 from model import PSGANGenerator as Generator
 
 torch.backends.cudnn.benchmark = True
 
-def save_image(imgs, output_dir="log", img_name="output", img_ext=".png"):
+def save_image(imgs, output_dir="log", img_name="output", img_ext=".png", img_size=160):
     os.makedirs(output_dir, exist_ok=True)
-    vutils.save_image(imgs.data, "{}".format(os.path.join(output_dir, img_name+img_ext)))
+
+    img_name = "{}".format(os.path.join(output_dir, img_name+img_ext))
+    vutils.save_image(imgs.data, img_name)
+
+    saved_img = Image.open(img_name)
+    saved_img = saved_img.resize((img_size,img_size), Image.LANCZOS)
+    saved_img.save(img_name)
 
 def train(args):
     def to_var(x, volatile=False, requires_grad=False):
@@ -83,7 +91,8 @@ def train(args):
 
     experiment_dir = os.path.normpath(args.trained_model).split(os.sep)[-2]
     dataset_dir = os.path.normpath(args.trained_model).split(os.sep)[-3]
-    sample_dir = os.path.sep.join([args.save_dir, dataset_dir, experiment_dir])
+    sample_dir = os.path.sep.join([args.save_dir, dataset_dir, experiment_dir, "fake_sample"])
+    interpolation_dir = os.path.sep.join([args.save_dir, dataset_dir, experiment_dir, "interpolation_sample"])
     
     # generate fake image for sampling
     for i in range(32):
@@ -95,13 +104,13 @@ def train(args):
                                                     tile=args.tile),
                                                     volatile=False)
       fake_img = generator(random_noise, tile=args.tile)
-      save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=sample_dir, img_name="sample_from_random_noise_" + str(i+1))
+      save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=sample_dir, img_name="sample_from_random_noise_" + str(i+1), img_size=args.sample_output_size)
 
 
     fake_img = generator(random_noise_interpolation, tile=1)
-    save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=sample_dir, img_name="interpolation_sample")
+    save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=interpolation_dir, img_name="interpolation_sample", img_size=args.sample_output_size)
     fake_img = generator(random_noise_interpolation_left_right, tile=1)
-    save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=sample_dir, img_name="interpolation_left_to_right_sample")
+    save_image(fake_img.mul(0.5).add(0.5).cpu(), output_dir=interpolation_dir, img_name="interpolation_left_to_right_sample", img_size=args.sample_output_size)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -120,6 +129,7 @@ if __name__ == '__main__':
     parser.add_argument('--layer_num', type=int, default=5, help='number of layers')
     parser.add_argument('--base_conv_channel', type=int, default=64, help='base channel number of convolution layer')
     parser.add_argument('--tile', type=int, default=None, help='')
+    parser.add_argument('--sample_output_size', type=int, default=500, help='')
 
     parser.add_argument('--save_dir', type=str, default="./samples/", help='directory of saving sampled image')
 
